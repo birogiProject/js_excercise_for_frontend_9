@@ -36,7 +36,6 @@
     fetchQuizData();
   });
 
-
   // `fetchQuizData関数`を実装する
   // - 実現したいこと
   //   - async/awaitを使って実装する
