@@ -32,7 +32,9 @@
   });
 
   // 「Restart」ボタンをクリックしたら再度クイズデータを取得する
-
+  restartButton.addEventListener('click', (event) => {
+    fetchQuizData();
+  });
 
 
   // `fetchQuizData関数`を実装する
