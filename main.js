@@ -105,7 +105,10 @@
   //   - 無し
   // - 戻り値
   //   - 無し
-
+  function finishQuiz() {
+    alert(`${gemeState.numberOfCorrects} / ${gemeState.quizzes.length} corrects`);
+    restartButton.style.display = 'block';
+  }
 
   // removeAllAnswers関数を実装する
   // - 実現したいこと
