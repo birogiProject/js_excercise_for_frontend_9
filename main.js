@@ -87,9 +87,7 @@
   //   - 無し
   function setNextQuiz() {
     pQuestion.textContent = '';
-    while (ulAnswer.firstChild) {
-      ulAnswer.removeChild(ulAnswer.firstChild);
-    }
+    removeAllAnswers();
     if (gemeState.currentIndex < gemeState.quizzes.length) {
       makeQuiz();
     } else {
@@ -117,7 +115,11 @@
   //   - 無し
   // - 戻り値
   //   - 無し
-
+  function removeAllAnswers() {
+    while (ulAnswer.firstChild) {
+      ulAnswer.removeChild(ulAnswer.firstChild);
+    }
+  }
 
   // makeQuiz関数を実装する
   // - 実現したいこと
