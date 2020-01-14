@@ -20,7 +20,11 @@
   };
 
   // HTMLのid値がセットされているDOMを取得する
-
+  const divConatiner = document.getElementById('container');
+  const pQuestion = document.getElementById('question');
+  const ulAnswer = document.getElementById('answers');
+  const pResult = document.getElementById('result');
+  const restartButton = document.getElementById('restart-button');
 
   // ページの読み込みが完了したらクイズ情報を取得する
 
