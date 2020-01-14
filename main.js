@@ -71,6 +71,7 @@
     gemeState.currentIndex = 0;
     gemeState.numberOfCorrects = 0;
 
+    setNextQuiz();
   }
 
   // setNextQuiz関数を実装する
