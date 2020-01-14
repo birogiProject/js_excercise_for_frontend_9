@@ -85,7 +85,17 @@
   //   - 無し
   // - 戻り値
   //   - 無し
-
+  function setNextQuiz() {
+    pQuestion.textContent = '';
+    while (ulAnswer.firstChild) {
+      ulAnswer.removeChild(ulAnswer.firstChild);
+    }
+    if (gemeState.currentIndex < gemeState.quizzes.length) {
+      makeQuiz();
+    } else {
+      finishQuiz();
+    }
+  }
 
   // finishQuiz関数を実装する
   // - 実現したいこと
