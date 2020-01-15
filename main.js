@@ -137,7 +137,35 @@
   //   - 無し
   // - 戻り値無し
   //   - 無し
+  function makeQuiz() {
+    for (const key in gemeState.quizzes) {
+      const quiz = gemeState.quizzes[gemeState.currentIndex];
+      pQuestion.textContent = quiz.question;
 
+      console.log(key + ': ' + quiz.correct_answer);
+
+      ////TODO: 別のタスクでコメントアウトを外して実装
+      ////https://github.com/birogiProject/js_excercise_for_frontend_9/issues/10
+      //const answer = shuffleAnswer(quiz);
+      // answer.forEach((value) => {
+      //   const liAnswer = document.createElement('li');
+      //   ulAnswer.appendChild(liAnswer);
+      //   liAnswer.addEventListener('click', (event) => {
+      //     if (value === quiz.correct_answer) {
+      //       gemeState.numberOfCorrects++;
+      //       alert('Correct answer!!');
+      //     } else {
+      //       alert(`Wrong answer... (The correct answer is "${quiz.correct_answer}")`);
+      //     }
+      //   });
+      //});
+
+      gemeState.currentIndex++;
+    }
+
+
+
+  }
 
   // quizオブジェクトの中にあるcorrect_answer, incorrect_answersを結合して
   // 正解・不正解の解答をシャッフルする。
