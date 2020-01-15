@@ -20,7 +20,6 @@
   };
 
   // HTMLのid値がセットされているDOMを取得する
-  const divConatiner = document.getElementById('container');
   const pQuestion = document.getElementById('question');
   const ulAnswer = document.getElementById('answers');
   const pResult = document.getElementById('result');
@@ -55,9 +54,6 @@
   // - 戻り値
   //   - 無し
   async function fetchQuizData() {
-    while (ulAnswer.firstChild) {
-      ulAnswer.removeChild(ulAnswer.firstChild);
-    }
     pQuestion.textContent = 'Now loading...';
     pResult.textContent = '';
     restartButton.style.display = 'none';
@@ -138,38 +134,34 @@
   // - 戻り値無し
   //   - 無し
   function makeQuiz() {
-    for (const key in gemeState.quizzes) {
-      const quiz = gemeState.quizzes[gemeState.currentIndex];
-      pQuestion.textContent = quiz.question;
+    const quiz = gemeState.quizzes[gemeState.currentIndex];
+    pQuestion.textContent = quiz.question;
+    console.log(gemeState.currentIndex + ': ' + quiz.correct_answer);
 
-      console.log(key + ': ' + quiz.correct_answer);
-
-      ////TODO: 別のタスクでコメントアウトを外して実装
-      ////https://github.com/birogiProject/js_excercise_for_frontend_9/issues/10
-      //const answer = shuffleAnswer(quiz);
-      // answer.forEach((value) => {
-      //   const liAnswer = document.createElement('li');
-      //   ulAnswer.appendChild(liAnswer);
-      //   liAnswer.addEventListener('click', (event) => {
-      //     if (value === quiz.correct_answer) {
-      //       gemeState.numberOfCorrects++;
-      //       alert('Correct answer!!');
-      //     } else {
-      //       alert(`Wrong answer... (The correct answer is "${quiz.correct_answer}")`);
-      //     }
-      //   });
-      //});
-
-      gemeState.currentIndex++;
-    }
-
-
-
+    const answers = shuffleAnswer(quiz);
+    answers.forEach((value) => {
+      const liAnswer = document.createElement('li');
+      liAnswer.textContent = value;
+      ulAnswer.appendChild(liAnswer);
+      liAnswer.addEventListener('click', (event) => {
+        if (value === quiz.correct_answer) {
+          gemeState.numberOfCorrects++;
+          alert('Correct answer!!');
+        } else {
+          alert(`Wrong answer... (The correct answer is "${quiz.correct_answer}")`);
+        }
+        gemeState.currentIndex++;
+        setNextQuiz();
+      });
+    });
   }
 
   // quizオブジェクトの中にあるcorrect_answer, incorrect_answersを結合して
   // 正解・不正解の解答をシャッフルする。
-
+  function shuffleAnswer(quiz) {
+    const answers = [quiz.correct_answer, ...quiz.incorrect_answers];
+    return shuffle(answers);
+  }
 
   // `shuffle関数` を実装する
   // - 実現したいこと
@@ -181,7 +173,14 @@
   //   - array : 配列
   // - 戻り値
   //   - shffuledArray : シャッフル後の配列(引数の配列とは別の配列であることに注意する)
-
+  function shuffle(array) {
+    const shffuledArray = array.slice();
+    for (let i = shffuledArray.length - 1; i >= 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [shffuledArray[i], shffuledArray[j]] = [shffuledArray[j], shffuledArray[i]];
+    }
+    return shffuledArray;
+  }
 
 
   // unescapeHTML関数を実装する
