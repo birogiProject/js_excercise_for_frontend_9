@@ -13,17 +13,27 @@
   //   - quizzes : fetchで取得したクイズデータの配列(resutls)を保持する
   //   - currentIndex : 現在何問目のクイズに取り組んでいるのかをインデックス番号で保持する
   //   - numberOfCorrects : 正答数を保持するう
-
+  const gemeState = {
+    quizzes: [],
+    currentIndex: 0,
+    numberOfCorrects: 0
+  };
 
   // HTMLのid値がセットされているDOMを取得する
-
+  const pQuestion = document.getElementById('question');
+  const ulAnswer = document.getElementById('answers');
+  const pResult = document.getElementById('result');
+  const restartButton = document.getElementById('restart-button');
 
   // ページの読み込みが完了したらクイズ情報を取得する
-
+  window.addEventListener('load', (event) => {
+    fetchQuizData();
+  });
 
   // 「Restart」ボタンをクリックしたら再度クイズデータを取得する
-
-
+  restartButton.addEventListener('click', (event) => {
+    fetchQuizData();
+  });
 
   // `fetchQuizData関数`を実装する
   // - 実現したいこと
@@ -43,7 +53,20 @@
   //   - 無し
   // - 戻り値
   //   - 無し
+  async function fetchQuizData() {
+    pQuestion.textContent = 'Now loading...';
+    pResult.textContent = '';
+    restartButton.style.display = 'none';
 
+    const response = await fetch(API_URL);
+    const data = await response.json();
+
+    gemeState.quizzes = data.results;
+    gemeState.currentIndex = 0;
+    gemeState.numberOfCorrects = 0;
+
+    setNextQuiz();
+  }
 
   // setNextQuiz関数を実装する
   // - 実現したいこと
@@ -57,7 +80,15 @@
   //   - 無し
   // - 戻り値
   //   - 無し
-
+  function setNextQuiz() {
+    pQuestion.textContent = '';
+    removeAllAnswers();
+    if (gemeState.currentIndex < gemeState.quizzes.length) {
+      makeQuiz();
+    } else {
+      finishQuiz();
+    }
+  }
 
   // finishQuiz関数を実装する
   // - 実現したいこと
@@ -67,7 +98,10 @@
   //   - 無し
   // - 戻り値
   //   - 無し
-
+  function finishQuiz() {
+    alert(`${gemeState.numberOfCorrects} / ${gemeState.quizzes.length} corrects`);
+    restartButton.style.display = 'block';
+  }
 
   // removeAllAnswers関数を実装する
   // - 実現したいこと
@@ -76,7 +110,11 @@
   //   - 無し
   // - 戻り値
   //   - 無し
-
+  function removeAllAnswers() {
+    while (ulAnswer.firstChild) {
+      ulAnswer.removeChild(ulAnswer.firstChild);
+    }
+  }
 
   // makeQuiz関数を実装する
   // - 実現したいこと
@@ -93,11 +131,34 @@
   //   - 無し
   // - 戻り値無し
   //   - 無し
+  function makeQuiz() {
+    const quiz = gemeState.quizzes[gemeState.currentIndex];
+    pQuestion.textContent = unescapeHTML(quiz.question);
 
+    const answers = shuffleAnswers(quiz);
+    answers.forEach((value) => {
+      const liAnswer = document.createElement('li');
+      liAnswer.textContent = unescapeHTML(value);
+      ulAnswer.appendChild(liAnswer);
+      liAnswer.addEventListener('click', (event) => {
+        if (value === quiz.correct_answer) {
+          gemeState.numberOfCorrects++;
+          alert('Correct answer!!');
+        } else {
+          alert(`Wrong answer... (The correct answer is "${quiz.correct_answer}")`);
+        }
+        gemeState.currentIndex++;
+        setNextQuiz();
+      });
+    });
+  }
 
   // quizオブジェクトの中にあるcorrect_answer, incorrect_answersを結合して
   // 正解・不正解の解答をシャッフルする。
-
+  function shuffleAnswers(quiz) {
+    const answers = [quiz.correct_answer, ...quiz.incorrect_answers];
+    return shuffle(answers);
+  }
 
   // `shuffle関数` を実装する
   // - 実現したいこと
@@ -109,8 +170,14 @@
   //   - array : 配列
   // - 戻り値
   //   - shffuledArray : シャッフル後の配列(引数の配列とは別の配列であることに注意する)
-
-
+  function shuffle(array) {
+    const shffuledArray = array.slice();
+    for (let i = shffuledArray.length - 1; i >= 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [shffuledArray[i], shffuledArray[j]] = [shffuledArray[j], shffuledArray[i]];
+    }
+    return shffuledArray;
+  }
 
   // unescapeHTML関数を実装する
   // - 実現したいこと
@@ -121,5 +188,14 @@
   //   - 文字列
   // - 戻り値
   //   - 文字列
+  function unescapeHTML(str) {
+    let div = document.createElement("div");
+    div.innerHTML = str.replace(/</g, "&lt;")
+                       .replace(/>/g, "&gt;")
+                       .replace(/>/g, "&nbsp;")
+                       .replace(/\r/g, "&#13;")
+                       .replace(/\n/g, "g#10;");
+    return div.textContent || div.innerText;
+  }
 
 })();
