@@ -135,7 +135,7 @@
     const quiz = gemeState.quizzes[gemeState.currentIndex];
     pQuestion.textContent = unescapeHTML(quiz.question);
 
-    const answers = shuffleAnswer(quiz);
+    const answers = shuffleAnswers(quiz);
     answers.forEach((value) => {
       const liAnswer = document.createElement('li');
       liAnswer.textContent = unescapeHTML(value);
@@ -155,7 +155,7 @@
 
   // quizオブジェクトの中にあるcorrect_answer, incorrect_answersを結合して
   // 正解・不正解の解答をシャッフルする。
-  function shuffleAnswer(quiz) {
+  function shuffleAnswers(quiz) {
     const answers = [quiz.correct_answer, ...quiz.incorrect_answers];
     return shuffle(answers);
   }
