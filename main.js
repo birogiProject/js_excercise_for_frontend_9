@@ -60,8 +60,6 @@
 
     const response = await fetch(API_URL);
     const data = await response.json();
-    console.log(data);
-    console.log(data.results);
 
     gemeState.quizzes = data.results;
     gemeState.currentIndex = 0;
@@ -135,13 +133,12 @@
   //   - 無し
   function makeQuiz() {
     const quiz = gemeState.quizzes[gemeState.currentIndex];
-    pQuestion.textContent = quiz.question;
-    console.log(gemeState.currentIndex + ': ' + quiz.correct_answer);
+    pQuestion.textContent = unescapeHTML(quiz.question);
 
     const answers = shuffleAnswer(quiz);
     answers.forEach((value) => {
       const liAnswer = document.createElement('li');
-      liAnswer.textContent = value;
+      liAnswer.textContent = unescapeHTML(value);
       ulAnswer.appendChild(liAnswer);
       liAnswer.addEventListener('click', (event) => {
         if (value === quiz.correct_answer) {
@@ -182,7 +179,6 @@
     return shffuledArray;
   }
 
-
   // unescapeHTML関数を実装する
   // - 実現したいこと
   //   - &やクオーテーションマークなどが特殊文字としてセットされているので、
@@ -192,5 +188,14 @@
   //   - 文字列
   // - 戻り値
   //   - 文字列
+  function unescapeHTML(str) {
+    let div = document.createElement("div");
+    div.innerHTML = str.replace(/</g, "&lt;")
+                       .replace(/>/g, "&gt;")
+                       .replace(/>/g, "&nbsp;")
+                       .replace(/\r/g, "&#13;")
+                       .replace(/\n/g, "g#10;");
+    return div.textContent || div.innerText;
+  }
 
 })();
