@@ -54,7 +54,24 @@
   //   - 無し
   // - 戻り値
   //   - 無し
+  async function fetchQuizData() {
+    while (ulAnswer.firstChild) {
+      ulAnswer.removeChild(ulAnswer.firstChild);
+    }
+    pQuestion.textContent = 'Now loading...';
+    pResult.textContent = '';
+    restartButton.style.display = 'none';
 
+    const response = await fetch(API_URL);
+    const data = await response.json();
+    console.log(data);
+    console.log(data.results);
+
+    gemeState.quizzes = data.results;
+    gemeState.currentIndex = 0;
+    gemeState.numberOfCorrects = 0;
+
+  }
 
   // setNextQuiz関数を実装する
   // - 実現したいこと
